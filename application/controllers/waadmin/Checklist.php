@@ -90,18 +90,8 @@ class Checklist extends CI_Controller{
     }
 
     function editar($tipo='C',$id=NULL){
-    	//Tipos de documento
-      $data_crud_td['table'] = "wa_tipo_documento as t1";
-      $data_crud_td['columns'] = "t1.*";
-      $data_crud_td['where'] = array("t1.estado !=" => 0);
-      $data['tipos_documentos'] = $this->Crud->getRows($data_crud_td);
-
     	$data['current_url'] = base_url(uri_string());
     	$data['back_url'] = base_url($this->base_ctr . '/index');
-
-      //Url agregar personas waadmin/personas/index?popup
-      $data['propietario_url'] = base_url($this->config->item('admin_path') . '/personas/index?popup=propietario');
-      $data['morador_url'] = base_url($this->config->item('admin_path') . '/personas/index?popup=morador');
       
     	if(isset($id)){
     		$data['editar_url'] = base_url($this->base_ctr . '/editar/E/' . $id);
@@ -121,64 +111,35 @@ class Checklist extends CI_Controller{
 
     	$data['wa_tipo'] = $tipo;
     	$data['wa_modulo'] = $data['tipo'];
-    	$data['wa_menu'] = 'Unidad';
+    	$data['wa_menu'] = 'Checklist';
 
 
     	if($tipo == 'E' || $tipo == 'V'){
     		$data_row = array('id' => $id);
-        $unidad = $this->Checklist->get_row($data_row);
-        $unidad_id = $unidad['id'];
-    		$data['post'] = $unidad;
-
-        //Propietarios
-        $data_propietarios = array(
-          "tipo_persona" => "P",
-          "unidad_id" => $unidad_id
-        );
-
-        $data['propietarios'] = $this->Checklist->listar_personas($data_propietarios);
-
-        //Moradores
-        $data_moradores = array(
-          "tipo_persona" => "M",
-          "unidad_id" => $unidad_id
-        );
-        $data['moradores'] = $this->Checklist->listar_personas($data_moradores);
-
-    	}
-
-    	//Consultar grupos (tipos de Checklist)
-      $data_crud['table'] = "wa_grupo as t1";
-      $data_crud['columns'] = "t1.*";
-      $data_crud['where'] = array("t1.condominio_id"=>1, "t1.estado !=" => 0);
-      $data['grupos'] = $this->Crud->getRows($data_crud);
-
-      //Consultar condominios
-    	$data_crud['table'] = "wa_condominio as t1";
-    	$data_crud['columns'] = "t1.*";
-    	$data_crud['where'] = array("t1.estado !=" => 0);
-    	$data['condominios'] = $this->Crud->getRows($data_crud);
-     
+        $checklist = $this->Checklist->get_row($data_row);
+    		$data['post'] = $checklist;
+    	}    
 
     	if ($this->input->post()) {
     		$post= $this->input->post();
-    		$data['post'] = $post; 
+    		$data['post'] = $post;
 
     		$config = array(
     			array(
-    				'field' => 'id_grupo',
-    				'label' => 'Tipo de Unidad',
+    				'field' => 'checklist_nombre',
+    				'label' => 'Nombre checklist',
     				'rules' => 'required',
     				'errors' => array(
     					'required' => 'Campo requerido.',
     					)
     				),
           array(
-            'field' => 'nombre_unidad',
-            'label' => 'Nombre unidad',
-            'rules' => 'required',
+            'field' => 'ultima_numeracion',
+            'label' => 'Última numeración',
+            'rules' => 'required|is_natural',
             'errors' => array(
               'required' => 'Campo requerido.',
+              'is_natural' => 'Ingresar solo números enteros.',
               )
             )
     			);
@@ -189,85 +150,38 @@ class Checklist extends CI_Controller{
     		if ($this->form_validation->run() == FALSE){
     			/*Error*/
     			$data['post'] = $post;
-          if(!empty($post['propietario'])){
-            $data['propietarios'] = $this->Checklist->listar_personas($post['propietario'],true);
-          }
-
-          if(!empty($post['morador'])){
-            $data['moradores'] = $this->Checklist->listar_personas($post['morador'],true);
-          }
-
     		}else{
 
-          $aporta_ingresos = (isset($post['aporta_ingresos'])) ? $post['aporta_ingresos'] : 0 ;
+          $publicado = (isset($post['publicado'])) ? $post['publicado'] : 0 ;
 
     			$data_form = array(
-    				"condominio_id" => $post['id_condominio'],
-    				"nombre_unidad" => $post['nombre_unidad'],
-            "id_grupo" => $post['id_grupo'],
-            "descripcion" => $post['descripcion'],
-            "aporta_ingresos" => $aporta_ingresos
+    				"checklist_nombre" => $post['checklist_nombre'],
+    				"descripcion" => $post['descripcion'],
+            "ultima_numeracion" => $post['ultima_numeracion'],
+            "publicado" => $publicado
     				);
 
-          		//Agregar
+          //Agregar
     			if($tipo == 'C'){
     				$this->db->insert($this->primary_table, $data_form);
-    				$unidad_id = $this->db->insert_id();
+    				$checklist_id = $this->db->insert_id();
     				$this->session->set_userdata('msj_success', "Registro agregado satisfactoriamente.");
     			}
 
-          		//Editar
+          //Editar
     			if ($tipo == 'E') {
     				$this->db->where('id', $post['id']);
     				$this->db->update($this->primary_table, $data_form);
-    				$unidad_id = $post['id'];
+    				$checklist_id = $post['id'];
     				$this->session->set_userdata('msj_success', "Registros actualizados satisfactoriamente.");
     			}
-
-          //Insertar Propietarios
-          $data_up = array('estado' => 0);
-          $where_up = array('tipo_persona' => 'P','unidad_id' => $unidad_id);
-          $this->db->where($where_up);
-          $this->db->update('wa_unidad_persona', $data_up);
-          $propietario = $post['propietario'];
-          if(!empty($propietario)){
-            foreach ($propietario as $key => $value) {
-              if(!empty($value)){
-                  $data_insert = array(
-                    'tipo_persona' => 'P', //P:Propietario
-                    'unidad_id' => $unidad_id,
-                    'persona_id' => $value
-                  );
-                  $this->db->insert('wa_unidad_persona', $data_insert);
-              }
-            }
-          }
-
-          //Insertar Moradores
-          $data_up = array('estado' => 0);
-          $where_up = array('tipo_persona' => 'M','unidad_id' => $unidad_id);
-          $this->db->where($where_up);
-          $this->db->update('wa_unidad_persona', $data_up);
-          $morador = $post['propietario'];
-          if(!empty($morador)){
-            foreach ($morador as $key => $value) {
-              if(!empty($value)){
-                  $data_insert = array(
-                    'tipo_persona' => 'M', //P:Propietario
-                    'unidad_id' => $unidad_id,
-                    'persona_id' => $value
-                  );
-                  $this->db->insert('wa_unidad_persona', $data_insert);
-              }
-            }
-          }
 
     			redirect($this->base_ctr . '/index');
     		}
 
     	}
 
-    	$this->template->title($data['tipo'] . ' Unidad');
+    	$this->template->title($data['tipo'] . ' Checklist');
     	$this->template->build($this->base_ctr.'/editar', $data);
     }
 
@@ -277,7 +191,7 @@ class Checklist extends CI_Controller{
  *
  * @package     Checklist
  * @author      Juan Julio Sandoval Layza
- * @copyright webApu.com 
+ * @copyright   webApu.com 
  * @since       26-02-2015
  * @version     Version 1.0
  */

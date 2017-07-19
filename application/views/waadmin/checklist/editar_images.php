@@ -97,6 +97,54 @@ echo '</pre>';*/
              </tbody>
            </table><br>
 
+           <table class="table table-bordered">
+         <thead class="thead-default">
+           <tr>
+             <th><i class="fa fa-list"></i> Imágenes</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr>
+             <td>
+               <div class="form-group" style="margin-bottom: 0px;">
+                 <label for="imagen_cabecera" class="col-sm-2 control-label" style="text-align: right;">Imagen cabecera:</label>
+                 <div class="col-sm-10">
+                   <input type="file" name="imagen_cabecera" id="imagen_cabecera" <?php echo $retVal = ($wa_tipo == 'V') ? "disabled" : "";?>>
+                   <?php
+                   if(!empty($post['imagen_cabecera'])){
+                     ?>
+                     <p class="help-block">
+                       <a href="<?php echo base_url('images/uploads/' . $post['imagen_cabecera']);?>" target="_blank">
+                         <img src="<?php echo base_url('images/uploads/' . $post['imagen_cabecera']);?>" style="max-height: 60px;">
+                       </a>
+                     </p>
+                     <?php }?>
+                   </div>
+                 </div>
+               </td>
+             </tr>
+
+             <tr>
+             <td>
+               <div class="form-group" style="margin-bottom: 0px;">
+                 <label for="imagen_pie" class="col-sm-2 control-label" style="text-align: right;">Imagen pie:</label>
+                 <div class="col-sm-10">
+                   <input type="file" name="imagen_pie" id="imagen_pie" <?php echo $retVal = ($wa_tipo == 'V') ? "disabled" : "";?>>
+                   <?php
+                   if(!empty($post['imagen_pie'])){
+                     ?>
+                     <p class="help-block">
+                       <a href="<?php echo base_url('images/uploads/' . $post['imagen_pie']);?>" target="_blank">
+                         <img src="<?php echo base_url('images/uploads/' . $post['imagen_pie']);?>" style="max-height: 60px;">
+                       </a>
+                     </p>
+                     <?php }?>
+                   </div>
+                 </div>
+               </td>
+             </tr>
+           </tbody>
+         </table><br>
 </div>
 </fieldset >
 </div><!--end pad-->

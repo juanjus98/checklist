@@ -7,23 +7,23 @@ class Checklist_model extends CI_Model {
 
 function listado($limit, $start, $data = NULL) {
 
-    $where_array = array('t1.eliminado != ' => 1);
+    $where_array = array('t1.estado != ' => 0);
 
-   if (!empty($data['nombre_unidad'])) {
+   /*if (!empty($data['nombre_unidad'])) {
     $where_array["t1.nombre_unidad"] = $data['nombre_unidad'];
-   }
+   }*/
 
    if (!empty($data['campo'])) {
        $like[$data['campo']] = $data['busqueda'];
    } else {
-       $like['t1.nombres'] = "";
+       $like['t1.checklist_nombre'] = "";
    }
 
     //ORDENAR POR
     if (!empty($data['ordenar_por'])) {
         $order_by = $data['ordenar_por'] . ' ' . $data['ordentipo'];
     } else {
-        $order_by = 't1.id_usuario DESC';
+        $order_by = 't1.agregar DESC';
     }
 
     if ($start > 0) {
@@ -37,7 +37,7 @@ function listado($limit, $start, $data = NULL) {
     ->like($like)
     ->order_by($order_by)
     ->limit($limit, $start)
-    ->get("usuarios as t1")
+    ->get("web_checklist as t1")
     ->result_array();
 
 //       echo $this->db->last_query();
@@ -47,16 +47,16 @@ function listado($limit, $start, $data = NULL) {
 
 
 function total_registros($data = NULL) {
-    $where_array = array('t1.eliminado != ' => 1);
+    $where_array = array('t1.estado != ' => 0);
 
-    if (!empty($data['nombre_unidad'])) {
+    /*if (!empty($data['nombre_unidad'])) {
         $where_array["t1.nombre_unidad"] = $data['nombre_unidad'];
-    }
+    }*/
 
     if (!empty($data['campo'])) {
         $like[$data['campo']] = $data['busqueda'];
     } else {
-        $like['t1.nombres'] = "";
+        $like['t1.checklist_nombre'] = "";
     }
 
     $resultado = $this->db->select("t1.*")
@@ -64,7 +64,7 @@ function total_registros($data = NULL) {
     ->join("wa_grupo as t3", "t3.id = t1.grupo_id")*/
     ->where($where_array)
     ->like($like)
-    ->get("usuarios as t1")
+    ->get("web_checklist as t1")
     ->num_rows();
 
     return $resultado;
@@ -78,46 +78,15 @@ function get_row($data) {
         $where['t1.id'] = $data['id'];
     }
 
-    $resultado = $this->db->select("t1.*,t2.codigo_condominio, t2.nombre_condominio, t3.nombre_grupo")
-    ->join("wa_condominio as t2", "t2.id = t1.condominio_id")
-    ->join("wa_grupo as t3", "t3.id = t1.grupo_id")
+    $resultado = $this->db->select("t1.*")
+    /*->join("wa_condominio as t2", "t2.id = t1.condominio_id")
+    ->join("wa_grupo as t3", "t3.id = t1.grupo_id")*/
     ->where($where)
-    ->get("wa_unidad as t1")
+    ->get("web_checklist as t1")
     ->row_array();
 
     return $resultado;
 }
 
-//Traer información de wa_unidad_persona
-function listar_personas($data,$query_in=false) {
-    $where = array('t1.estado != ' => 0);
-    if(!$query_in){
-        if(!empty($data['tipo_persona'])){
-            $where['t1.tipo_persona'] = $data['tipo_persona'];
-        }
-
-        if(!empty($data['unidad_id'])){
-            $where['t1.unidad_id'] = $data['unidad_id'];
-        }
-
-        $resultado = $this->db->select("t2.*")
-        ->join("wa_persona as t2", "t2.id = t1.persona_id")
-        ->where($where)
-        ->get("wa_unidad_persona as t1")
-        ->result_array();
-
-        /*echo "<pre>";
-        print_r($this->db->last_query());
-        echo "</pre>";*/
-
-    }else{
-        $where_in = $data;
-        $resultado = $this->db->select("t1.*")
-        ->where_in("t1.id",$where_in)
-        ->get("wa_persona as t1")
-        ->result_array();
-    }
-    return $resultado;
-}
 
 }

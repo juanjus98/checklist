@@ -56,10 +56,10 @@ echo '</pre>';*/
                         <tbody>
                             <tr>
                                 <th><input type="checkbox" id="chkTodo" /></th>
-                                <!-- <th>Código</th> -->
-                                <th>Tipo Únidad</th>
-                                <th>Nombre unidad</th>
-                                <!-- <th>Condominio / Edificio</th> -->
+                                <th>Nombre</th>
+                                <th>Última numeración</th>
+                                <th class="text-center">Publicado</th>
+                                <th>Fecha de ingreso</th>
                                 <th></th>
                             </tr>
                             <?php
@@ -68,17 +68,23 @@ echo '</pre>';*/
                                     ?>
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="items[]" id="eliminarchk-<?php echo $item['id_usuario'] ?>" value="<?php echo $item['id_usuario'] ?>" class="chk">
+                                            <input type="checkbox" name="items[]" id="eliminarchk-<?php echo $item['id'] ?>" value="<?php echo $item['id'] ?>" class="chk">
                                         </td>
-                                        <td><?php echo $item['nombres']; ?></td>
-                                        <td><?php echo $item['usuario']; ?></td>
-                                        <!-- <td><?php echo $item['nombre_condominio']; ?></td> -->
+                                        <td><?php echo $item['checklist_nombre']; ?></td>
+                                        <td><?php echo $item['ultima_numeracion']; ?></td>
+
+                                        <td class="text-center">
+                                        <?php 
+                                        //echo $item['publicado'];
+                                        echo $publicado = ($item['publicado'] == 1) ? '<small class="badge bg-green">SI</small>' : '<small class="badge bg-orange">NO</small>' ;
+                                        ?>
+                                            
+                                        </td>
+                                        <td><?php echo $item['agregar']; ?></td>
+
                                         <td>
-                                            <a href="<?php echo $ver_url . $item['id_usuario']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                            <a href="<?php echo $editar_url . $item['id_usuario']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-
-                                            <!-- <a class="btn btn-info btn-xs wapopup" data-width="800" data-height="500" href="<?php echo base_url(); ?>waadmin/productos_galeria/index/<?php echo $item['id_usuario']; ?>" data-toggle="tooltip" title="Galería"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span></a> -->
-
+                                            <a href="<?php echo $ver_url . $item['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                            <a href="<?php echo $editar_url . $item['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="Editar"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                         </td>
                                     </tr>
                                     <?php
