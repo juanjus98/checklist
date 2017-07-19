@@ -1,6 +1,30 @@
 $(function() {
     "use strict";
-    console.log("TIENE QUE SALIR EL SACE! " + moment());
+
+    //Select cascade
+    $(document).on("change", ".checklist_select", function() {
+        var checklist_id = $(this).val();
+
+        var checklist_categoria_select = $(".checklist_categoria_select");
+
+        if (checklist_id == "") {
+            checklist_categoria_select.attr("disabled", true);
+            checklist_categoria_select.html('<option value="">Seleccionar</option>');
+        } else {
+            $.ajax({
+                url: base_url + "categorias/getcategoriasajax",
+                type: "POST",
+                data: "checklist_id=" + checklist_id,
+                success: function(html) {
+                    checklist_categoria_select.html(html);
+                    /*checklist_categoria_select.attr('lang', codigo);*/
+                    checklist_categoria_select.removeAttr("disabled");
+                }
+            });
+        }
+        return false;
+    });
+    
 
     //Date range
     $('.input-dateRange').daterangepicker({
@@ -8,14 +32,14 @@ $(function() {
         minDate: moment().subtract(29, 'days'),
         maxDate: moment().add(15,'days'),
         locale: {
-        "format": "DD/MM/YYYY",
-        "separator": " - ",
-        "applyLabel": "Aplicar",
-        "cancelLabel": "Cancelar",
-        "fromLabel": "De",
-        "toLabel": "A",
-        "customRangeLabel": "Custom",
-        "daysOfWeek": [
+            "format": "DD/MM/YYYY",
+            "separator": " - ",
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "De",
+            "toLabel": "A",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": [
             "Do",
             "Lu",
             "Ma",
@@ -23,8 +47,8 @@ $(function() {
             "Ju",
             "Vi",
             "Sa"
-        ],
-        "monthNames": [
+            ],
+            "monthNames": [
             "Enero",
             "Febrero",
             "Marzo",
@@ -37,9 +61,9 @@ $(function() {
             "Octubre",
             "Noviembre",
             "Diciembre"
-        ],
-        "firstDay": 1
-    }});
+            ],
+            "firstDay": 1
+        }});
 
     //Date
     $('.input-date').daterangepicker({
@@ -48,8 +72,8 @@ $(function() {
         minDate: moment().subtract(1, 'month'),
         maxDate: moment().add(1,'month'),
         locale: {
-        "format": "DD/MM/YYYY",
-        "daysOfWeek": [
+            "format": "DD/MM/YYYY",
+            "daysOfWeek": [
             "Do",
             "Lu",
             "Ma",
@@ -57,8 +81,8 @@ $(function() {
             "Ju",
             "Vi",
             "Sa"
-        ],
-        "monthNames": [
+            ],
+            "monthNames": [
             "Enero",
             "Febrero",
             "Marzo",
@@ -71,9 +95,9 @@ $(function() {
             "Octubre",
             "Noviembre",
             "Diciembre"
-        ],
-        "firstDay": 1
-    }});
+            ],
+            "firstDay": 1
+        }});
 
     //Submit Eliminar 
     $(document).on("click", "#btn-eliminar", function() {
@@ -107,14 +131,14 @@ $(function() {
 
     //Cargar popup
     $(document).on("click", ".wapopup", function() {
-     var url = $(this).attr('href');
-     var title = $(this).attr('title');
-     var height = $(this).data('height');
-     var width = $(this).data('width');
-     popupCenter(url,title,width,height);
-     return false;
+       var url = $(this).attr('href');
+       var title = $(this).attr('title');
+       var height = $(this).data('height');
+       var width = $(this).data('width');
+       popupCenter(url,title,width,height);
+       return false;
 
- });
+   });
 
     // -------- Toggle navbar Muestra/Oculta
     $(document).on("click", "#wa-togle", function() {

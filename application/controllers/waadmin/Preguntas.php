@@ -3,11 +3,11 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Categorias extends CI_Controller {
+class Preguntas extends CI_Controller {
     private $ctr_name;
     private $base_ctr; //Url base del controlodor
-    private $primary_table = "web_checklist_categoria"; //Tabla principal
-    public $base_title = "Categorias";
+    private $primary_table = "web_checklist_pregunta"; //Tabla principal
+    public $base_title = "Preguntas";
 
     public  $user_info;
 
@@ -25,7 +25,7 @@ class Categorias extends CI_Controller {
 
         $this->load->helper('waadmin');
         $this->load->model("crud_model","Crud");
-        $this->load->model('categorias_model', 'Categorias');
+        $this->load->model('preguntas_model', 'Preguntas');
 
         $this->ctr_name = $this->router->fetch_class();
     //Base del controlador
@@ -46,7 +46,7 @@ class Categorias extends CI_Controller {
      */
     public function index() {
         $data['wa_modulo'] = 'Listado';
-        $data['wa_menu'] = $this->base_title;       
+        $data['wa_menu'] = $this->base_title;
 
         //URLS
         $controlador = $this->base_ctr;
@@ -80,10 +80,10 @@ class Categorias extends CI_Controller {
         $data['post'] = $post;
 
         //Total de registros por post
-        $data['total_registros'] = $this->Categorias->total_registros($post);
+        $data['total_registros'] = $this->Preguntas->total_registros($post);
 
         //Listado
-        $data['listado'] = $this->Categorias->listado($per_page, $page, $post);
+        $data['listado'] = $this->Preguntas->listado($per_page, $page, $post);
 
         //Paginacion
         $total_rows = $data['total_registros'];
@@ -107,7 +107,7 @@ class Categorias extends CI_Controller {
     function editar($tipo='C',$id=NULL){
         $data['current_url'] = base_url(uri_string());
         $data['back_url'] = base_url($this->base_ctr . '/index');
-
+      
         if(isset($id)){
             $data['editar_url'] = base_url($this->base_ctr . '/editar/E/' . $id);
         }
@@ -126,13 +126,13 @@ class Categorias extends CI_Controller {
 
         $data['wa_tipo'] = $tipo;
         $data['wa_modulo'] = $data['tipo'];
-        $data['wa_menu'] = 'Categorias';
+        $data['wa_menu'] = 'Preguntas';
 
 
         if($tipo == 'E' || $tipo == 'V'){
             $data_row = array('id' => $id);
-            $checklist_categorias = $this->Categorias->get_row($data_row);
-            $data['post'] = $checklist_categorias;
+        $checklist_Preguntas = $this->Preguntas->get_row($data_row);
+            $data['post'] = $checklist_Preguntas;
         }
 
         //Consultar checklists
@@ -147,39 +147,39 @@ class Categorias extends CI_Controller {
 
             $config = array(
                 array(
-                    'field' => 'checklist_id',
-                    'label' => 'Checklist',
-                    'rules' => 'required',
-                    'errors' => array(
-                        'required' => 'Campo requerido.',
-                        )
-                    ),
-                array(
-                    'field' => 'nombre_categoria',
-                    'label' => 'Nombre categoría',
-                    'rules' => 'required',
-                    'errors' => array(
-                        'required' => 'Campo requerido.',
-                        )
-                    ),
-                array(
-                    'field' => 'titulo_obs',
-                    'label' => 'Título OBS',
-                    'rules' => 'required',
-                    'errors' => array(
-                        'required' => 'Campo requerido.',
-                        )
-                    ),
-                array(
-                    'field' => 'orden',
-                    'label' => 'Orden',
-                    'rules' => 'required|is_natural',
-                    'errors' => array(
-                        'required' => 'Campo requerido.',
-                        'is_natural' => 'Ingresar solo números enteros.',
-                        )
+                'field' => 'checklist_id',
+                'label' => 'Checklist',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'Campo requerido.',
                     )
-                );
+                ),
+                array(
+                'field' => 'nombre_categoria',
+                'label' => 'Nombre categoría',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'Campo requerido.',
+                    )
+                ),
+                array(
+                'field' => 'titulo_obs',
+                'label' => 'Título OBS',
+                'rules' => 'required',
+                'errors' => array(
+                    'required' => 'Campo requerido.',
+                    )
+                ),
+                array(
+                'field' => 'orden',
+                'label' => 'Orden',
+                'rules' => 'required|is_natural',
+                'errors' => array(
+                    'required' => 'Campo requerido.',
+                    'is_natural' => 'Ingresar solo números enteros.',
+                    )
+                )
+            );
 
             $this->form_validation->set_rules($config);
             $this->form_validation->set_error_delimiters('<p class="text-red text-error">', '</p>');
@@ -189,39 +189,39 @@ class Categorias extends CI_Controller {
                 $data['post'] = $post;
             }else{
 
-              /*$publicado = (isset($post['publicado'])) ? $post['publicado'] : 0 ;*/
+          /*$publicado = (isset($post['publicado'])) ? $post['publicado'] : 0 ;*/
 
-              $data_form = array(
+            $data_form = array(
                 "checklist_id" => $post['checklist_id'],
                 "nombre_categoria" => $post['nombre_categoria'],
                 "titulo_obs" => $post['titulo_obs'],
                 "descripcion" => $post['descripcion'],
                 "orden" => $post['orden'],
-                );
+            );
 
           //Agregar
-              if($tipo == 'C'){
-                $this->db->insert($this->primary_table, $data_form);
-                $categoria_id = $this->db->insert_id();
-                $this->session->set_userdata('msj_success', "Registro agregado satisfactoriamente.");
-            }
+                if($tipo == 'C'){
+                    $this->db->insert($this->primary_table, $data_form);
+                    $categoria_id = $this->db->insert_id();
+                    $this->session->set_userdata('msj_success', "Registro agregado satisfactoriamente.");
+                }
 
           //Editar
-            if ($tipo == 'E') {
-                $this->db->where('id', $post['id']);
-                $this->db->update($this->primary_table, $data_form);
-                $categoria_id = $post['id'];
-                $this->session->set_userdata('msj_success', "Registros actualizados satisfactoriamente.");
+                if ($tipo == 'E') {
+                    $this->db->where('id', $post['id']);
+                    $this->db->update($this->primary_table, $data_form);
+                    $categoria_id = $post['id'];
+                    $this->session->set_userdata('msj_success', "Registros actualizados satisfactoriamente.");
+                }
+
+                redirect($this->base_ctr . '/index');
             }
 
-            redirect($this->base_ctr . '/index');
         }
 
+        $this->template->title($data['tipo'] . ' Categoría');
+        $this->template->build($this->base_ctr.'/editar', $data);
     }
-
-    $this->template->title($data['tipo'] . ' Categoría');
-    $this->template->build($this->base_ctr.'/editar', $data);
-}
 
 /**
  * Eliminar
@@ -233,7 +233,7 @@ class Categorias extends CI_Controller {
  * @since       26-02-2015
  * @version     Version 1.0
  */
-public function eliminar() {
+ public function eliminar() {
    if ($this->input->post()) {
        $items = $this->input->post('items');
        if (!empty($items)) {
@@ -261,17 +261,7 @@ public function eliminar() {
    $this->template->build('inicio');
 }
 
-
-public function getCategoriasAjax() {
-    if ($this->input->post()) {
-        $checklist_id = $this->input->post();
-        $dataAll = array('checklist_id' => $checklist_id);
-        $data['categorias'] = $this->Categorias->listadoAll($dataAll);
-    }
-    $this->load->view($this->base_ctr.'get_categorias_ajax', $data);
 }
 
-}
-
-/* End of file categorias.php */
-/* Location: ./application/controllers/waadmin/categorias.php */
+/* End of file Preguntas.php */
+/* Location: ./application/controllers/waadmin/Preguntas.php */
