@@ -264,11 +264,11 @@ public function eliminar() {
 
 public function getCategoriasAjax() {
     if ($this->input->post()) {
-        $checklist_id = $this->input->post();
+        $checklist_id = $this->input->post('checklist_id');
         $dataAll = array('checklist_id' => $checklist_id);
         $data['categorias'] = $this->Categorias->listadoAll($dataAll);
     }
-    $this->load->view($this->base_ctr.'get_categorias_ajax', $data);
+    $this->load->view($this->base_ctr.'/get_categorias_ajax', $data);
 }
 
 }

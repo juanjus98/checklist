@@ -57,7 +57,8 @@ echo '</pre>';*/
                             <tr>
                                 <th><input type="checkbox" id="chkTodo" /></th>
                                 <th>Checklist</th>
-                                <th>Nombre categoría</th>
+                                <th>Categoría</th>
+                                <th>Pregunta</th>
                                 <th class="text-center">Orden</th>
                                 <th>Fecha de ingreso</th>
                                 <th></th>
@@ -73,6 +74,7 @@ echo '</pre>';*/
                                         
                                         <td><?php echo $item['checklist_nombre']; ?></td>
                                         <td><?php echo $item['nombre_categoria']; ?></td>
+                                        <td><?php echo $item['pregunta']; ?></td>
                                         <td class="text-center"><?php echo $item['orden']; ?></td>
                                         
                                         <td><?php echo $item['agregar']; ?></td>

@@ -127,6 +127,7 @@ function listadoAll($data) {
     if(!empty($data['checklist_id'])){
         $where['t1.checklist_id'] = $data['checklist_id'];
     }
+
         //ORDENAR POR
     if (!empty($data['ordenar_por'])) {
         $order_by = $data['ordenar_por'] . ' ' . $data['ordentipo'];

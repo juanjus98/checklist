@@ -111,4 +111,36 @@ class Preguntas_model extends CI_Model {
         return $resultado;
     }
 
+function listadoAll($data) {
+    //Where
+    $where = array('t1.estado != ' => 0);
+
+    if(!empty($data['checklist_id'])){
+        $where['t1.checklist_id'] = $data['checklist_id'];
+    }
+
+    if(!empty($data['checklist_categoria_id'])){
+        $where['t1.checklist_categoria_id'] = $data['checklist_categoria_id'];
+    }
+
+        //ORDENAR POR
+    if (!empty($data['ordenar_por'])) {
+        $order_by = $data['ordenar_por'] . ' ' . $data['ordentipo'];
+    } else {
+        $order_by = 't1.orden ASC';
+    }
+
+
+    $resultado = $this->db->select("t1.*, t2.checklist_nombre, t3.nombre_categoria")
+        ->join("web_checklist as t2", "t2.id = t1.checklist_id")
+        ->join("web_checklist_categoria as t3", "t3.id = t1.checklist_categoria_id")
+    ->where($where)
+/*    ->like($like)*/
+    ->order_by($order_by)
+    /*->limit($limit, $start)*/
+    ->get("web_checklist_pregunta as t1")
+    ->result_array();
+    return $resultado;
+}
+
 }

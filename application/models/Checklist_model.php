@@ -9,9 +9,9 @@ function listado($limit, $start, $data = NULL) {
 
     $where_array = array('t1.estado != ' => 0);
 
-   /*if (!empty($data['nombre_unidad'])) {
-    $where_array["t1.nombre_unidad"] = $data['nombre_unidad'];
-   }*/
+   if (!empty($data['publicado'])) {
+    $where_array["t1.publicado"] = $data['publicado'];
+   }
 
    if (!empty($data['campo'])) {
        $like[$data['campo']] = $data['busqueda'];
@@ -49,9 +49,9 @@ function listado($limit, $start, $data = NULL) {
 function total_registros($data = NULL) {
     $where_array = array('t1.estado != ' => 0);
 
-    /*if (!empty($data['nombre_unidad'])) {
-        $where_array["t1.nombre_unidad"] = $data['nombre_unidad'];
-    }*/
+    if (!empty($data['publicado'])) {
+    $where_array["t1.publicado"] = $data['publicado'];
+   }
 
     if (!empty($data['campo'])) {
         $like[$data['campo']] = $data['busqueda'];

@@ -17,6 +17,7 @@ $config['admin_path'] = 'waadmin';
 /**
  * Generales para el website
  */
+$config['website_name'] = "Checklist";
 $config['website']['dominio'] = "www.webapu.com";
 
 /**

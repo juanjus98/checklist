@@ -1,7 +1,11 @@
 <?php
-/*echo '<pre>';
-print_r(array_reverse($propietarios));
-echo '</pre>';*/
+//Categorias
+$categorias_disabled='disabled';
+if(!empty($post['checklist_id'])){
+  $categorias_disabled='';
+  $data = array('checklist_id' => $post['checklist_id']);
+  $categorias = $this->Categorias->listadoAll($data);
+}
 ?>
 <div class="row">
  <div class="col-xs-12">
@@ -66,16 +70,16 @@ echo '</pre>';*/
 
                         <label for="checklist_categoria_id" class="col-sm-2 control-label" style="text-align: right;"><span style="color: red; font-weight: bold;">*</span> Categoría:</label>
                          <div class="col-sm-4">
-                         <select name="checklist_categoria_id" id="checklist_categoria_id" class="form-control checklist_categoria_select" disabled>
+                         <select name="checklist_categoria_id" id="checklist_categoria_id" class="form-control checklist_categoria_select" <?php echo $categorias_disabled;?>>
                             <option value="">Seleccionar</option>
                             <?php
-                            if (!empty($checklists)) {
-                              foreach ($checklists as $checklist) {
+                            if (!empty($categorias)) {
+                              foreach ($categorias as $categoria) {
                                 $selected = "";
-                                if ($post['checklist_categoria_id'] == $checklist['id']) {
+                                if ($post['checklist_categoria_id'] == $categoria['id']) {
                                   $selected = "selected";
                                 }
-                                echo '<option value="' . $checklist['id'] . '" ' . $selected . '>' . $checklist['checklist_nombre'] . '</option>';
+                                echo '<option value="' . $categoria['id'] . '" ' . $selected . '>' . $categoria['nombre_categoria'] . '</option>';
                               }
                             }
                             ?>

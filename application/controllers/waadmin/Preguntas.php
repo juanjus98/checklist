@@ -26,6 +26,7 @@ class Preguntas extends CI_Controller {
         $this->load->helper('waadmin');
         $this->load->model("crud_model","Crud");
         $this->load->model('preguntas_model', 'Preguntas');
+        $this->load->model('categorias_model', 'Categorias');
 
         $this->ctr_name = $this->router->fetch_class();
     //Base del controlador
@@ -131,7 +132,7 @@ class Preguntas extends CI_Controller {
 
         if($tipo == 'E' || $tipo == 'V'){
             $data_row = array('id' => $id);
-        $checklist_Preguntas = $this->Preguntas->get_row($data_row);
+            $checklist_Preguntas = $this->Preguntas->get_row($data_row);
             $data['post'] = $checklist_Preguntas;
         }
 
@@ -155,16 +156,16 @@ class Preguntas extends CI_Controller {
                     )
                 ),
                 array(
-                'field' => 'nombre_categoria',
-                'label' => 'Nombre categoría',
+                'field' => 'checklist_categoria_id',
+                'label' => 'Categoría',
                 'rules' => 'required',
                 'errors' => array(
                     'required' => 'Campo requerido.',
                     )
                 ),
                 array(
-                'field' => 'titulo_obs',
-                'label' => 'Título OBS',
+                'field' => 'pregunta',
+                'label' => 'Pregunta',
                 'rules' => 'required',
                 'errors' => array(
                     'required' => 'Campo requerido.',
@@ -185,32 +186,28 @@ class Preguntas extends CI_Controller {
             $this->form_validation->set_error_delimiters('<p class="text-red text-error">', '</p>');
 
             if ($this->form_validation->run() == FALSE){
-                /*Error*/
                 $data['post'] = $post;
             }else{
 
-          /*$publicado = (isset($post['publicado'])) ? $post['publicado'] : 0 ;*/
+                $data_form = array(
+                    "checklist_id" => $post['checklist_id'],
+                    "checklist_categoria_id" => $post['checklist_categoria_id'],
+                    "pregunta" => $post['pregunta'],
+                    "orden" => $post['orden'],
+                );
 
-            $data_form = array(
-                "checklist_id" => $post['checklist_id'],
-                "nombre_categoria" => $post['nombre_categoria'],
-                "titulo_obs" => $post['titulo_obs'],
-                "descripcion" => $post['descripcion'],
-                "orden" => $post['orden'],
-            );
-
-          //Agregar
+              //Agregar
                 if($tipo == 'C'){
                     $this->db->insert($this->primary_table, $data_form);
-                    $categoria_id = $this->db->insert_id();
+                    $pregunta_id = $this->db->insert_id();
                     $this->session->set_userdata('msj_success', "Registro agregado satisfactoriamente.");
                 }
 
-          //Editar
+              //Editar
                 if ($tipo == 'E') {
                     $this->db->where('id', $post['id']);
                     $this->db->update($this->primary_table, $data_form);
-                    $categoria_id = $post['id'];
+                    $pregunta_id = $post['id'];
                     $this->session->set_userdata('msj_success', "Registros actualizados satisfactoriamente.");
                 }
 
@@ -219,7 +216,7 @@ class Preguntas extends CI_Controller {
 
         }
 
-        $this->template->title($data['tipo'] . ' Categoría');
+        $this->template->title($data['tipo'] . ' Pregunta');
         $this->template->build($this->base_ctr.'/editar', $data);
     }
 

@@ -12,7 +12,7 @@ $(function() {
             checklist_categoria_select.html('<option value="">Seleccionar</option>');
         } else {
             $.ajax({
-                url: base_url + "categorias/getcategoriasajax",
+                url: base_url + "waadmin/categorias/getcategoriasajax",
                 type: "POST",
                 data: "checklist_id=" + checklist_id,
                 success: function(html) {
