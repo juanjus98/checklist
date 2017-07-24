@@ -1,6 +1,27 @@
 $(function() {
     "use strict";
 
+    //Seleccionar respuesta btn-respuesta
+    $(document).on("click", ".btn-respuesta", function() {
+        var $respuesta = $(this).data('respuesta');
+        var $respuestaInput = $(this).parents('.btn-group').find("input[name='respuestas[]']");
+        $(this).parents('.btn-group').find('button').removeClass('btn-success active').addClass('btn-default');
+        $(this).parents('.btn-group').find('button').removeClass('btn-danger active').addClass('btn-default');
+
+        if($respuesta == $respuestaInput.val()){
+            $respuestaInput.val('');
+            $(this).addClass('btn-default');
+        }else{
+            $respuestaInput.val($respuesta);
+            if($respuesta == 'SI'){
+                $(this).removeClass('btn-default').addClass('btn-success active');
+            }else{
+             $(this).removeClass('btn-default').addClass('btn-danger active'); 
+         }
+     }
+     return false;
+ });
+
     //Select cascade
     $(document).on("change", ".checklist_select", function() {
         var checklist_id = $(this).val();
@@ -131,14 +152,14 @@ $(function() {
 
     //Cargar popup
     $(document).on("click", ".wapopup", function() {
-       var url = $(this).attr('href');
-       var title = $(this).attr('title');
-       var height = $(this).data('height');
-       var width = $(this).data('width');
-       popupCenter(url,title,width,height);
-       return false;
+     var url = $(this).attr('href');
+     var title = $(this).attr('title');
+     var height = $(this).data('height');
+     var width = $(this).data('width');
+     popupCenter(url,title,width,height);
+     return false;
 
-   });
+ });
 
     // -------- Toggle navbar Muestra/Oculta
     $(document).on("click", "#wa-togle", function() {

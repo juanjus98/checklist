@@ -69,3 +69,10 @@ $route['waadmin/salir'] = "waadmin/waauth/logout";
 $route['waadmin/perfil/(:any)'] = "waadmin/waauth/perfil";
 
 $route['waadmin/condominio/(:any)/(:num)'] = "waadmin/condominios/editar/$1/$2";
+
+/**
+ * Checklist user
+ */
+$route['resultados'] = "checklist/resultados";
+$route['resultados/:num'] = "checklist/resultados";
+$route['resultado/(:any)/(:num)'] = "checklist/resultado/$1/$2"; //Editar y visualizar

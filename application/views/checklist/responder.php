@@ -1,6 +1,6 @@
 <?php
 /*echo '<pre>';
-print_r(array_reverse($propietarios));
+print_r($checklist);
 echo '</pre>';*/
 ?>
 <div class="row">
@@ -8,10 +8,10 @@ echo '</pre>';*/
    <div class="box box-danger">
 
      <form class="form-horizontal" name="edit_form" id="edit_form" action="<?php echo $current_url;?>" method="post" role="form">
-       <input type="hidden" name="checklist_id" value="<?php echo $post['id'];?>">
+       <input type="hidden" name="checklist_id" value="<?php echo $checklist['id'];?>">
        <div class="box-header" style="padding-bottom: 0;">
          <h3 class="box-title">
-           <?php echo $retVal = (!empty($post['checklist_nombre'])) ? $post['checklist_nombre'] : '';?>
+           <?php echo $checklist['checklist_nombre'];?>
          </h3>
          <div class="box-tools">
            <div class="pull-right">
@@ -160,10 +160,11 @@ echo '</pre>';*/
                      <td class="text-center"><?php echo $ii;?></td>
                      <td><?php echo $pregunta['pregunta'];?></td>
                      <td class="text-center">
-                       <div class="btn-group" data-toggle="btn-toggle">
-                         <button type="button" class="btn btn-default btn-sm" data-toggle="on">SI</button>
-                         <button type="button" class="btn btn-default btn-sm" data-toggle="off">NO</button>
-                         <input type="text" name="respuestas[]">
+                       <div class="btn-group text-center" role="group" data-toggle="btn-toggle">
+                         <button type="button" class="btn btn-sm btn-respuesta btn-default" data-toggle="on" data-respuesta="SI">SI</button>
+                         <button type="button" class="btn btn-sm btn-respuesta btn-default" data-toggle="off" data-respuesta="NO">NO</button>
+                         <input type="hidden" name="preguntas[]" value="<?php echo $pregunta['id'];?>">
+                         <input type="hidden" class="respuesta" name="respuestas[]">
                        </div>
                      </td>
                      <td class="text-center" style="width: 100px;">
