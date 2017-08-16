@@ -449,29 +449,30 @@ class Checklist extends CI_Controller{
             $data['post'] = $post;
           }else{
 
-            $numeracion = $checklist['ultima_numeracion'] + 1;
-            $numeracionStr = str_pad($numeracion, 6, "0", STR_PAD_LEFT);
-
             $fecha = date("Y-m-d H:i:s");
             $usuario_id = 1;
 
             $data_form = array(
-              "checklist_id" => $post['checklist_id'],
-              "numeracion" => $numeracionStr,
+              /*"checklist_id" => $post['checklist_id'],*/
+              /*"numeracion" => $numeracionStr,*/
               "placa_tracto" => $post['placa_tracto'],
               "conductor" => $post['conductor'],
               "kilometraje" => $post['kilometraje'],
-              "fecha" => $fecha,
               "placa_plat_cama" => $post['placa_plat_cama'],
               "origen" => $post['origen'],
               "destino" => $post['destino'],
               "tipo_carga" => $post['tipo_carga'],
-              "usuario_id" => $usuario_id
+              "usuario_id" => $usuario_id,
+              "editar" => $fecha,
               );
 
-            $this->db->insert('web_checklist_data', $data_form);
-            $checklist_data_id = $this->db->insert_id();
-            /*$checklist_data_id = 1;*/
+            $this->db->where('id', $post['id']);
+            $this->db->update('web_checklist_data', $data_form);
+            $checklist_data_id = $post['id'];
+
+            //Eliminar  web_checklist_pregunta_data
+            $this->db->where('checklist_data_id', $checklist_data_id);
+            $this->db->delete('web_checklist_pregunta_data');
 
             $preguntas = $post['preguntas'];
             $respuestas = $post['respuestas'];
@@ -496,14 +497,8 @@ class Checklist extends CI_Controller{
               }
             }
 
-            //Actualizar numeración
-            $dataUp = array('ultima_numeracion' => $numeracion);
-            $this->db->where('id', $post['checklist_id']);
-            $this->db->update('web_checklist', $dataUp);
-
             $this->session->set_userdata('msj_success', "Registro agregado satisfactoriamente.");
-            redirect('checklist/index');
-
+            redirect('checklist/resultados');
           }
 
         }
@@ -511,6 +506,68 @@ class Checklist extends CI_Controller{
         $this->template->title($data['tipo'] . ' Checklist');
         $this->template->build($this->base_ctr.'/resultado', $data);
       }
+
+/**
+ * Resultados
+ */
+public function topdf($id=null){
+  $dataRes = array('id' => $id,);
+  $post = $this->Checklist->getRowResultado($dataRes);
+  $data['post'] = $post;
+
+  //Consultar web_checklist_pregunta_data (RESPUESTAS)
+  $dataListRespuestas = array('checklist_data_id' => $id,);
+  $listadoRespuestas = $this->Checklist->listadoRespuestas($dataListRespuestas);
+  $data['listadoRespuestas'] = $listadoRespuestas;
+
+  //Consultar Checklist
+  $data_row = array('id' => $post['checklist_id']);
+  $checklist = $this->Checklist->get_row($data_row);
+  $data['checklist'] = $checklist;
+
+  //Categorías
+  $dataAll = array('checklist_id' => $checklist['id']);
+  $data['categorias'] = $this->Categorias->listadoAll($dataAll);
+
+  //Agregar Preguntas
+  foreach ($data['categorias'] as $key => $categoria) {
+        //Consultar Preguntas
+    $dataPreg = array('checklist_id' => $checklist['id'], 'checklist_categoria_id' => $categoria['id']);
+    $data['categorias'][$key]['preguntas'] = $this->Preguntas->listadoAll($dataPreg);
+  }
+
+  echo "<pre>";
+  print_r($post);
+  echo "</pre><hr>";
+
+  echo "<pre>";
+  print_r($checklist);
+  echo "</pre><hr>";
+
+  echo "<pre>";
+  print_r($data['categorias']);
+  echo "</pre><hr>";
+
+  echo "<pre>";
+  print_r($listadoRespuestas);
+  echo "</pre><hr>";
+
+  die();
+
+  $filename = time()."_order.pdf";
+
+  $html = $this->load->view('checklist/mpdf_test',$data,true);
+
+  $this->load->library('M_pdf');
+
+  $this->m_pdf->pdf->WriteHTML($html);
+
+  //download it D save F.
+
+  /*$this->mpdf->pdf->Output("./uploads/".$filename, "F");*/
+  $this->m_pdf->pdf->Output($filename, "D");
+
+}
 
 
       /**
@@ -650,5 +707,28 @@ public function eliminar() {
  $this->template->title('Eliminar.');
  $this->template->build('inicio');
 }
+
+
+/**
+ * Test mpdf
+ */
+public function mpdf_test(){
+  $data['titulo'] = "Checklist";
+
+  $filename = time()."_order.pdf";
+
+  $html = $this->load->view('checklist/mpdf_test',$data,true);
+
+  $this->load->library('M_pdf');
+
+  $this->m_pdf->pdf->WriteHTML($html);
+
+  //download it D save F.
+
+  /*$this->mpdf->pdf->Output("./uploads/".$filename, "F");*/
+  $this->m_pdf->pdf->Output($filename, "D");
+
+}
+
 
 }

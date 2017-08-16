@@ -24,8 +24,16 @@ if (!function_exists('modulos_menus')) {
       'icono' => 'fa-address-book-o',
       'menus' => array(
         array(
-          'nombre_menu' => 'Link 1',
-          'ruta' => 'index'
+          'nombre_menu' => 'Checklist',
+          'ruta' => 'checklist/index'
+        ),
+        array(
+          'nombre_menu' => 'Categorías',
+          'ruta' => 'categorias/index'
+        ),
+        array(
+          'nombre_menu' => 'Preguntas',
+          'ruta' => 'preguntas/index'
         )
       )
     ),

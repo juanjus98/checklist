@@ -43,8 +43,7 @@ class Checklist extends CI_Controller{
 
 		//BUSQUEDA
 		$data['campos_busqueda'] = array(
-			't1.nombre_unidad' => 'Nombre únidad',
-      't3.nombre_grupo' => 'Tipo únidad'
+			't1.checklist_nombre' => 'Nombre'
 			);
 
 		$sessionName = 's_' . $this->primary_table; //Session name

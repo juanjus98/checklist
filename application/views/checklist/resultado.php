@@ -1,6 +1,6 @@
 <?php
 /*echo '<pre>';
-print_r($checklist);
+print_r($post);
 echo '</pre>';*/
 ?>
 <div class="row">
@@ -8,7 +8,7 @@ echo '</pre>';*/
    <div class="box box-danger">
 
      <form class="form-horizontal" name="edit_form" id="edit_form" action="<?php echo $current_url;?>" method="post" role="form">
-       <input type="hidden" name="checklist_id" value="<?php echo $checklist['id'];?>">
+       <input type="hidden" name="id" value="<?php echo $post['id'];?>"><!-- web_checklist_data_id-->
        <div class="box-header" style="padding-bottom: 0;">
          <h3 class="box-title">
            <?php echo $checklist['checklist_nombre'];?>
@@ -191,7 +191,7 @@ echo '</pre>';*/
                        </div>
                      </td>
                      <td class="text-center" style="width: 100px;">
-                       <input type="text" name="observaciones[]" class="form-control input-sm">
+                       <input type="text" name="observaciones[]" class="form-control input-sm" value="<?php echo $retVal = (!empty($respuesta['observacion'])) ? $respuesta['observacion'] : ''; ?>">
                      </td>
                    </tr>
                    <?php

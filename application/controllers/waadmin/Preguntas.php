@@ -49,6 +49,12 @@ class Preguntas extends CI_Controller {
         $data['wa_modulo'] = 'Listado';
         $data['wa_menu'] = $this->base_title;
 
+        //Consultar categorias
+        /*$data_crud['table'] = "web_checklist_categoria as t1";
+        $data_crud['columns'] = "t1.*";
+        $data_crud['where'] = array("t1.estado !=" => 0);
+        $data['categorias'] = $this->Crud->getRows($data_crud);*/
+
         //URLS
         $controlador = $this->base_ctr;
         $data['agregar_url'] = base_url($controlador . '/editar/C');
@@ -59,7 +65,7 @@ class Preguntas extends CI_Controller {
 
         //BUSQUEDA
         $data['campos_busqueda'] = array(
-            't1.nombre_categoria' => 'Nombre categoría'
+            't1.pregunta' => 'Pregunta'
             );
 
         $sessionName = 's_' . $this->primary_table; //Session name
